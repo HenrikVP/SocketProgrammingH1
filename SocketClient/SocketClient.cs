@@ -10,7 +10,8 @@ namespace SocketClient
         {
             StartClient();
         }
-        internal void StartClient()
+
+        void StartClient()
         {
             IPAddress iPServerAddress = IPAddress.Parse("192.168.1.2");
             IPEndPoint serverEndPoint = new(iPServerAddress, 22222);
@@ -25,7 +26,7 @@ namespace SocketClient
             while(true) CreateMessage(sender);
         }
 
-        private void CreateMessage(Socket sender)
+        void CreateMessage(Socket sender)
         {
             Console.Write("Message:");
             string msg = Console.ReadLine() + "<EOM>";

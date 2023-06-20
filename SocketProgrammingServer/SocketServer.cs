@@ -11,7 +11,7 @@ namespace SocketProgrammingServer
             //new MultiThreading().StartThreading();
             StartServer();
         }
-        internal void StartServer()
+        void StartServer()
         {
             #region Endpoint Creation
             //Creates an endpoint by selecting the PC's hostname and getting the 
@@ -91,7 +91,7 @@ namespace SocketProgrammingServer
         /// </summary>
         /// <param name="addressList"></param>
         /// <returns>integer on array</returns>
-        private int ChooseIpAddress(IPAddress[] addressList)
+        int ChooseIpAddress(IPAddress[] addressList)
         {
             int i = 0;
             foreach (var item in addressList)
