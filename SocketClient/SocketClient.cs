@@ -22,21 +22,19 @@ namespace SocketClient
             sender.Connect(serverEndPoint);
             Console.WriteLine("Connected to: " + serverEndPoint.ToString());
 
-            while(true)
-            {
-                Console.Write("Message:");
-                string msg = Console.ReadLine() + "<EOM>";
+            while(true) CreateMessage(sender);
+        }
 
-                byte[] byteArr = Encoding.ASCII.GetBytes(msg);
-                sender.Send(byteArr);
+        private void CreateMessage(Socket sender)
+        {
+            Console.Write("Message:");
+            string msg = Console.ReadLine() + "<EOM>";
 
-                string returnMsg = GetMessage(sender);
-                Console.WriteLine(returnMsg);
-            }
-            
+            byte[] byteArr = Encoding.ASCII.GetBytes(msg);
+            sender.Send(byteArr);
 
-            //sender.Shutdown(SocketShutdown.Both);
-            //sender.Close();
+            string returnMsg = GetMessage(sender);
+            Console.WriteLine(returnMsg);
         }
 
         string GetMessage(Socket socket)

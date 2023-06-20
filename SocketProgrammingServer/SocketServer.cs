@@ -14,6 +14,8 @@ namespace SocketProgrammingServer
         internal void StartServer()
         {
             #region Endpoint Creation
+            //Creates an endpoint by selecting the PC's hostname and getting the 
+            //ipv4 network interfaces ip address list
             IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName(), AddressFamily.InterNetwork);
             int choice = ChooseIpAddress(iPHostEntry.AddressList);
             IPAddress iPAddress = iPHostEntry.AddressList[choice];
@@ -22,6 +24,7 @@ namespace SocketProgrammingServer
 
             IPEndPoint iPEndPoint = new(iPAddress, 22222);
             #endregion
+            //Creates socket that only listens and binds it with the server endpoint
             Socket listener = new(
                 iPAddress.AddressFamily,
                 SocketType.Stream,
@@ -33,10 +36,12 @@ namespace SocketProgrammingServer
 
             while (true)
             {
+                //If a connection have been made with the listener socket,
+                //a new thread is created that handles the traffic, therefore not
+                //blocking 
                 Socket handler = listener.Accept();
                 Thread thread = new(new ThreadStart(() => ConnectToClient(handler)));
                 thread.Start();
-                //ConnectToClient(handler);
             }
         }
 
@@ -50,18 +55,19 @@ namespace SocketProgrammingServer
             Console.WriteLine("Connect to: " + handler.RemoteEndPoint);
             while (true)
             {
+                //This method will be a thread by itself, and keeps the 
+                //connection open with the client socket, thus being
+                //able to recieve messages without interuption.
                 string? data = GetMessage(handler);
                 byte[] returnMsg = Encoding.ASCII.GetBytes("Server received msg<EOM>");
                 handler.Send(returnMsg);
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Close();
-
-                Console.WriteLine(data);
+                Console.WriteLine(data + $" ({handler.RemoteEndPoint})");
             }
         }
 
         /// <summary>
-        /// Recieves message from client
+        /// Recieves and converts bytes from client message to ASCII,
+        /// until End Of Message tag is recieved
         /// </summary>
         /// <param name="socket"></param>
         /// <returns></returns>
@@ -77,7 +83,6 @@ namespace SocketProgrammingServer
                 data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
                 if (data.Contains("<EOM>")) break;
             }
-
             return data;
         }
 
