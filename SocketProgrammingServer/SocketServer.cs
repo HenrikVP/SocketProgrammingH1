@@ -6,12 +6,15 @@ namespace SocketProgrammingServer
 {
     internal class SocketServer
     {
+        public SocketServer() 
+        {
+            StartServer();
+        }
         internal void StartServer()
         {
             IPHostEntry iPHostEntry = Dns.GetHostEntry(
                 Dns.GetHostName(),
-                System.Net.Sockets.AddressFamily.InterNetwork
-                );
+                System.Net.Sockets.AddressFamily.InterNetwork);
             int choice = ChooseIpAddress(iPHostEntry.AddressList);
             IPAddress iPAddress = iPHostEntry.AddressList[choice];
             //Or convert a string to type of IpAddress
@@ -20,27 +23,45 @@ namespace SocketProgrammingServer
             IPEndPoint iPEndPoint = new(iPAddress, 22222);
 
             Socket listener = new(
-                iPAddress.AddressFamily, 
-                SocketType.Stream, 
+                iPAddress.AddressFamily,
+                SocketType.Stream,
                 ProtocolType.Tcp);
 
             listener.Bind(iPEndPoint);
             listener.Listen(10);
+            Console.WriteLine("Server listens on " + iPEndPoint);
 
+            while(true) ConnectToClient(listener);
+        }
+
+        void ConnectToClient(Socket listener)
+        {
             Socket handler = listener.Accept();
+            Console.WriteLine("Connect to: " + handler.RemoteEndPoint);
 
-            string data = null;
-            byte[] bytes = null;
+            string? data = GetMessage(handler);
+            byte[] returnMsg = Encoding.ASCII.GetBytes("Server received msg<EOM>");
+            handler.Send(returnMsg);
+            handler.Shutdown(SocketShutdown.Both);
+            handler.Close();
+
+            Console.WriteLine(data);
+        }
+
+        string GetMessage(Socket socket)
+        {
+            string? data = null;
+            byte[] bytes;
 
             while (true)
             {
                 bytes = new byte[4096];
-                int bytesRec = handler.Receive(bytes);
+                int bytesRec = socket.Receive(bytes);
                 data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
                 if (data.Contains("<EOM>")) break;
             }
 
-            Console.WriteLine(data);
+            return data;
         }
 
         /// <summary>

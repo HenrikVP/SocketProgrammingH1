@@ -1,1 +1,1 @@
-﻿new SocketProgrammingServer.SocketServer().StartServer();
+﻿new SocketProgrammingServer.SocketServer();
