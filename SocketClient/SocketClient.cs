@@ -33,7 +33,6 @@ namespace SocketClient
 
             sender.Shutdown(SocketShutdown.Both);
             sender.Close();
-
         }
 
         string GetMessage(Socket socket)
