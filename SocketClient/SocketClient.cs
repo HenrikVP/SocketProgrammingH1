@@ -8,13 +8,10 @@ namespace SocketClient
     {
         public SocketClient()
         {
-            while (true) StartClient();
+            StartClient();
         }
         internal void StartClient()
         {
-            Console.Write("Message:");
-            string msg = Console.ReadLine() + "<EOM>";
-
             IPAddress iPServerAddress = IPAddress.Parse("192.168.1.2");
             IPEndPoint serverEndPoint = new(iPServerAddress, 22222);
 
@@ -24,15 +21,22 @@ namespace SocketClient
                 ProtocolType.Tcp);
             sender.Connect(serverEndPoint);
             Console.WriteLine("Connected to: " + serverEndPoint.ToString());
+
+            while(true)
+            {
+                Console.Write("Message:");
+                string msg = Console.ReadLine() + "<EOM>";
+
+                byte[] byteArr = Encoding.ASCII.GetBytes(msg);
+                sender.Send(byteArr);
+
+                string returnMsg = GetMessage(sender);
+                Console.WriteLine(returnMsg);
+            }
             
-            byte[] byteArr = Encoding.ASCII.GetBytes(msg);
-            sender.Send(byteArr);
 
-            string returnMsg = GetMessage(sender);
-            Console.WriteLine(returnMsg);
-
-            sender.Shutdown(SocketShutdown.Both);
-            sender.Close();
+            //sender.Shutdown(SocketShutdown.Both);
+            //sender.Close();
         }
 
         string GetMessage(Socket socket)
