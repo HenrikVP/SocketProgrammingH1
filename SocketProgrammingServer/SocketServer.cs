@@ -23,6 +23,9 @@ namespace SocketProgrammingServer
             listener.Listen(10);
             Console.WriteLine("Server listens on " + iPEndPoint);
 
+            Thread clientThread = new(new ThreadStart(new SocketClient.SocketClient().StartClient));
+            clientThread.Start();
+            
             while (true)
             {
                 //If a connection have been made with the listener socket,
