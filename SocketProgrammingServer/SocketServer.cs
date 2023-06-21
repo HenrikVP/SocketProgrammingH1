@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
 
 namespace SocketProgrammingServer
@@ -14,23 +13,12 @@ namespace SocketProgrammingServer
         }
         void StartServer()
         {
-            #region Endpoint Creation
-            //Creates an endpoint by selecting the PC's hostname and getting the 
-            //ipv4 network interfaces ip address list
-            IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName(), AddressFamily.InterNetwork);
-            int choice = ChooseIpAddress(iPHostEntry.AddressList);
-            IPAddress iPAddress = iPHostEntry.AddressList[choice];
-            //Or convert a string to type of IpAddress
-            //IPAddress iPAddress2 = IPAddress.Parse("192.168.1.2");
-
-            IPEndPoint iPEndPoint = new(iPAddress, 22222);
-            #endregion
             //Creates socket that only listens and binds it with the server endpoint
             Socket listener = new(
-                iPAddress.AddressFamily,
+                AddressFamily.InterNetwork,
                 SocketType.Stream,
                 ProtocolType.Tcp);
-
+            IPEndPoint iPEndPoint = CreateEndPoint();
             listener.Bind(iPEndPoint);
             listener.Listen(10);
             Console.WriteLine("Server listens on " + iPEndPoint);
@@ -47,8 +35,36 @@ namespace SocketProgrammingServer
         }
 
         /// <summary>
+        /// Creates an endpoint by selecting the PC's hostname and getting the 
+        ///ipv4 network interfaces ip address list
+        /// </summary>
+        /// <param name="addressList"></param>
+        /// <returns>IPEndPoint for server</returns>
+        IPEndPoint CreateEndPoint()
+        {
+            IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName(), AddressFamily.InterNetwork);
+
+            int i = 0;
+            foreach (var item in iPHostEntry.AddressList)
+                Console.WriteLine($"[{i++}] {item}");
+
+            int j;
+            do { Console.Write("Input number of Ipaddress: "); }
+            while (!int.TryParse(Console.ReadLine(), out j)
+                || j < 0 || j >= iPHostEntry.AddressList.Length);
+
+            IPAddress iPAddress = iPHostEntry.AddressList[j];
+            //Or convert a string to type of IpAddress
+            //IPAddress iPAddress2 = IPAddress.Parse("192.168.1.2");
+            return new IPEndPoint(iPAddress, 22222);
+        }
+
+        /// <summary>
         /// Accepts connection from client, Recieves message 
         /// and returns message to client
+        /// This method will be a thread by itself, and keeps the 
+        /// connection open with the client socket, thus being
+        /// able to recieve messages without interuption.
         /// </summary>
         /// <param name="listener"></param>
         void ConnectToClient(Socket handler)
@@ -56,34 +72,12 @@ namespace SocketProgrammingServer
             Console.WriteLine("Connect to: " + handler.RemoteEndPoint);
             while (handler.Connected)
             {
-                //This method will be a thread by itself, and keeps the 
-                //connection open with the client socket, thus being
-                //able to recieve messages without interuption.
                 string? data = ClassLibrary1.Class1.GetMessage(handler);
                 byte[] returnMsg = Encoding.Unicode.GetBytes("Server received msg<EOM>");
                 if (handler.Connected) handler.Send(returnMsg);
                 Console.WriteLine(data + $" ({handler.RemoteEndPoint})");
             }
             Console.WriteLine("Disconnected with client " + handler.RemoteEndPoint);
-        }
-
-        /// <summary>
-        /// Selects IP from ip address array
-        /// </summary>
-        /// <param name="addressList"></param>
-        /// <returns>integer on array</returns>
-        int ChooseIpAddress(IPAddress[] addressList)
-        {
-            int i = 0;
-            foreach (var item in addressList)
-                Console.WriteLine($"[{i++}] {item}");
-
-            int j;
-            do { Console.Write("Input number of Ipaddress: "); }
-            while (!int.TryParse(Console.ReadLine(), out j)
-                || j < 0
-                || j >= addressList.Length);
-            return j;
         }
     }
 }
