@@ -11,9 +11,13 @@ namespace SocketProgrammingServer
             //new MultiThreading().StartThreading();
             StartServer();
         }
+        /// <summary>
+        /// Creates socket that only listens and binds it with the server endpoint
+        ///If a connection have been made with the listener socket,
+        ///a new thread is created that handles the traffic, therefore not blocking 
+        /// </summary>
         void StartServer()
         {
-            //Creates socket that only listens and binds it with the server endpoint
             Socket listener = new(
                 AddressFamily.InterNetwork,
                 SocketType.Stream,
@@ -25,12 +29,9 @@ namespace SocketProgrammingServer
 
             Thread clientThread = new(new ThreadStart(new SocketClient.SocketClient().StartClient));
             clientThread.Start();
-            
+
             while (true)
             {
-                //If a connection have been made with the listener socket,
-                //a new thread is created that handles the traffic, therefore not
-                //blocking 
                 Socket handler = listener.Accept();
                 Thread thread = new(new ThreadStart(() => ConnectToClient(handler)));
                 thread.Start();
