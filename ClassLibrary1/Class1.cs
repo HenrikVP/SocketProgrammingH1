@@ -15,6 +15,7 @@ namespace ClassLibrary1
                     byte[] bytes = new byte[4096];
                     int bytesRec = socket.Receive(bytes);
                     data += Encoding.Unicode.GetString(bytes, 0, bytesRec);
+                    Console.WriteLine("Bytes recieved: "+bytesRec);
                 }
                 catch (Exception)
                 {
