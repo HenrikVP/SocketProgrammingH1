@@ -8,7 +8,8 @@ namespace SocketClient
     {
         public void StartClient()
         {
-            IPAddress iPServerAddress = IPAddress.Parse("192.168.1.2");
+            Console.WriteLine("Input server ip to connect: ");
+            IPAddress iPServerAddress = IPAddress.Parse(Console.ReadLine());
             //IPAddress iPServerAddress = IPAddress.Parse("10.233.149.105");
             IPEndPoint serverEndPoint = new(iPServerAddress, 22222);
 
