@@ -23,7 +23,7 @@ namespace SocketClient
             sender.Connect(serverEndPoint);
             Console.WriteLine("Connected to: " + serverEndPoint.ToString());
 
-            while(true) CreateMessage(sender);
+            while (true) CreateMessage(sender);
         }
 
         void CreateMessage(Socket sender)
@@ -31,26 +31,12 @@ namespace SocketClient
             Console.Write("Message:");
             string msg = Console.ReadLine() + "<EOM>";
 
-            byte[] byteArr = Encoding.ASCII.GetBytes(msg);
+            byte[] byteArr = Encoding.Unicode.GetBytes(msg);
             sender.Send(byteArr);
 
-            string returnMsg = GetMessage(sender);
+            string? returnMsg = ClassLibrary1.Class1.GetMessage(sender);
             Console.WriteLine(returnMsg);
         }
 
-        string GetMessage(Socket socket)
-        {
-            string? data = null;
-            byte[] bytes;
-
-            while (true)
-            {
-                bytes = new byte[4096];
-                int bytesRec = socket.Receive(bytes);
-                data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                if (data.Contains("<EOM>")) break;
-            }
-            return data;
-        }
     }
 }

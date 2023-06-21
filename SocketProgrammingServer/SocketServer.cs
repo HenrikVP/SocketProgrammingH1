@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 
 namespace SocketProgrammingServer
@@ -53,37 +54,17 @@ namespace SocketProgrammingServer
         void ConnectToClient(Socket handler)
         {
             Console.WriteLine("Connect to: " + handler.RemoteEndPoint);
-            while (true)
+            while (handler.Connected)
             {
                 //This method will be a thread by itself, and keeps the 
                 //connection open with the client socket, thus being
                 //able to recieve messages without interuption.
-                string? data = GetMessage(handler);
-                byte[] returnMsg = Encoding.ASCII.GetBytes("Server received msg<EOM>");
-                handler.Send(returnMsg);
+                string? data = ClassLibrary1.Class1.GetMessage(handler);
+                byte[] returnMsg = Encoding.Unicode.GetBytes("Server received msg<EOM>");
+                if (handler.Connected) handler.Send(returnMsg);
                 Console.WriteLine(data + $" ({handler.RemoteEndPoint})");
             }
-        }
-
-        /// <summary>
-        /// Recieves and converts bytes from client message to ASCII,
-        /// until End Of Message tag is recieved
-        /// </summary>
-        /// <param name="socket"></param>
-        /// <returns></returns>
-        string GetMessage(Socket socket)
-        {
-            string? data = null;
-            byte[] bytes;
-
-            while (true)
-            {
-                bytes = new byte[4096];
-                int bytesRec = socket.Receive(bytes);
-                data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                if (data.Contains("<EOM>")) break;
-            }
-            return data;
+            Console.WriteLine("Disconnected with client " + handler.RemoteEndPoint);
         }
 
         /// <summary>
