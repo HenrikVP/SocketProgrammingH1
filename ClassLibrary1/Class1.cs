@@ -26,5 +26,20 @@ namespace ClassLibrary1
             }
             return data;
         }
+
+        /// <summary>
+        /// Part one of the split is the message
+        /// Part two is username
+        /// Part three is color
+        /// Part four is end of message tag
+        /// </summary>
+        /// <param name="msg"></param>
+        public static void ShowMessage(string msg)
+        {
+            string[] s = msg.Split('|');
+            Console.ForegroundColor = (ConsoleColor)int.Parse(s[2]);
+            Console.WriteLine(s[1] + " : " + s[0]);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
     }
 }

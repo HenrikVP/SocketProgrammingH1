@@ -11,6 +11,7 @@ namespace SocketProgrammingServer
             //new MultiThreading().StartThreading();
             StartServer();
         }
+
         /// <summary>
         /// Creates socket that only listens and binds it with the server endpoint
         ///If a connection have been made with the listener socket,
@@ -79,7 +80,9 @@ namespace SocketProgrammingServer
                 string? data = ClassLibrary1.Class1.GetMessage(handler);
                 byte[] returnMsg = Encoding.Unicode.GetBytes("Server received msg<EOM>");
                 if (handler.Connected) handler.Send(returnMsg);
-                Console.WriteLine(data + $" ({handler.RemoteEndPoint})");
+                //TODO show message with username and color
+                ClassLibrary1.Class1.ShowMessage(data);
+                //Console.WriteLine(data + $" ({handler.RemoteEndPoint})");
             }
             Console.WriteLine("Disconnected with client " + handler.RemoteEndPoint);
         }
