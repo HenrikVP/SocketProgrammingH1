@@ -1,4 +1,4 @@
-﻿using ClassLibrary1;
+﻿using SocketClassLibrary;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -37,7 +37,7 @@ namespace SocketClient
             sender.Send(byteArr);
 
             //TODO show with username & color
-            string? returnMsg = ClassLibrary1.Class1.GetMessage(sender);
+            string? returnMsg = SocketClassLibrary.Message.GetMessage(sender);
             Console.WriteLine(returnMsg);
         }
     }

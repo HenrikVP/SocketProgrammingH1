@@ -1,4 +1,4 @@
-﻿namespace ClassLibrary1
+﻿namespace SocketClassLibrary
 {
     public class User
     {
@@ -20,6 +20,13 @@
             while (!int.TryParse(Console.ReadLine(), out color)
                 || color < 1 || color >= Enum.GetNames(typeof(ConsoleColor)).Length);
             Color = color;
+        }
+
+        public User(string? name, int color, string? ipAddress)
+        {
+            Name = name;
+            Color = color;
+            IpAddress = ipAddress;
         }
     }
 }

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketProgrammingServer", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketClient", "SocketClient\SocketClient.csproj", "{5C33BB0A-AA2D-4506-9AFF-0D4CB2DB2A03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{8F51201E-D5C6-4C48-905B-C23918083CE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketClassLibrary", "ClassLibrary1\SocketClassLibrary.csproj", "{8F51201E-D5C6-4C48-905B-C23918083CE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -77,11 +77,11 @@ namespace SocketProgrammingServer
             Console.WriteLine("Connect to: " + handler.RemoteEndPoint);
             while (handler.Connected)
             {
-                string? data = ClassLibrary1.Class1.GetMessage(handler);
+                string? data = SocketClassLibrary.Message.GetMessage(handler);
                 byte[] returnMsg = Encoding.Unicode.GetBytes("Server received msg<EOM>");
                 if (handler.Connected) handler.Send(returnMsg);
                 //TODO show message with username and color
-                ClassLibrary1.Class1.ShowMessage(data);
+                SocketClassLibrary.Message.ShowMessage(data);
                 //Console.WriteLine(data + $" ({handler.RemoteEndPoint})");
             }
             Console.WriteLine("Disconnected with client " + handler.RemoteEndPoint);

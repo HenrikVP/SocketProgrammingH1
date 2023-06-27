@@ -1,9 +1,9 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 
-namespace ClassLibrary1
+namespace SocketClassLibrary
 {
-    public class Class1
+    public class Message
     {
         public static string? GetMessage(Socket socket)
         {
